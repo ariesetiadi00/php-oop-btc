@@ -74,12 +74,23 @@ if (!isset($_SESSION['login'])) {
             <li class="nav-item">
                 <a class="nav-link" href="<?= URL ?>/view/member/index.php">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Member</span></a>
+                    <span>Member</span>
+                </a>
             </li>
 
-            <!-- Divider -->
             <hr class="sidebar-divider">
 
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Account
+            </div>
+
+            <li class="nav-item">
+                <a class="nav-link" href="<?= URL ?>/controller/logout.php" data-toggle="modal" data-target="#logoutModal">
+                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                    <span>Logout</span>
+                </a>
+            </li>
         </ul>
         <!-- End of Sidebar -->
 
@@ -102,22 +113,17 @@ if (!isset($_SESSION['login'])) {
 
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?= $_SESSION['login']['name'] ?></span>
                                 <img class="img-profile rounded-circle" src="<?= URL ?>/resource/img/profile/<?= $_SESSION['login']['image'] ?>">
                             </a>
                             <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="<?= URL ?>/view/admin/setting.php">
-                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Settings
-                                </a>
-                                <div class="dropdown-divider"></div>
+                            <!-- <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                                 <a class="dropdown-item" href="<?= URL ?>/controller/logout.php" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
-                            </div>
+                            </div> -->
                         </li>
 
                     </ul>

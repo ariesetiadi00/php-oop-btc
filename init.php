@@ -23,4 +23,6 @@ $payment_model = new PaymentModel();
 // Global Property
 $date = new DateTime('now', new DateTimeZone('Asia/Shanghai'));
 $price = $payment_model->get_price()['price'];
+$member = $member_model->get_member_count();
+$payment = $payment_model->get_all();
 $id_pay = "BT00";

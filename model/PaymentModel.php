@@ -11,16 +11,19 @@ class PaymentModel extends Database
     // Get All Payment
     public function get_all()
     {
-        // Prepare SQL for all member data
-        $sql = "SELECT * FROM member_payment ORDER BY id DESC";
-
+        $member = [];
         // Execute query
-        $res = mysqli_query($this->db, $sql);
+        $res = mysqli_query($this->db, "SELECT * FROM member_payment ORDER BY id DESC");
 
-        // Looping fetching data
-        while ($r = mysqli_fetch_assoc($res)) {
-            $member[] = $r;
+        if (!$res) {
+            $member[] = 0;
+        } else {
+            // Looping fetching data
+            while ($r = mysqli_fetch_assoc($res)) {
+                $member[] = $r;
+            }
         }
+
 
         // Return all payment data
         return $member;
@@ -50,7 +53,8 @@ class PaymentModel extends Database
     {
         // Prepare Array 
         $debt = array();
-        $sql = "SELECT * FROM member_payment_debt WHERE member_id = '$id' ORDER BY member_payment_debt.month DESC";
+        $sql = "SELECT * FROM member_payment_debt WHERE member_id = '$id' ORDER BY member_payment_debt.month DESC
+        LIMIT 3";
 
         // Query data
         $res = mysqli_query($this->db, $sql);
@@ -63,12 +67,18 @@ class PaymentModel extends Database
         return $debt;
     }
 
+    public function del_debt($id, $month)
+    {
+        $sql = "DELETE FROM member_payment_debt WHERE member_id = '$id' AND month = '$month'";
+        return mysqli_query($this->db, $sql);
+    }
+
     // Cek debt
     public function debt($status, $id)
     {
         // prepare data debt
         $month = date('m');
-        $created_at = date('today');
+        $created_at = date('Y-m-d H:i:s');
 
         // Jika belum bayar bulan ini
         if (!$status) {
@@ -94,10 +104,16 @@ class PaymentModel extends Database
     }
 
     // Insert payment
-    public function insert_payment($member_id, $month, $price, $created_at)
+    public function insert_payment($member_id, $image, $name, $month, $price, $created_at)
     {
         // Prepare SQL
-        $sql = "INSERT INTO member_payment VALUES (0, '$member_id', '$month', '$price', '$created_at')";
+        $sql = "INSERT INTO member_payment VALUES (0, '$member_id', '$image', '$name', '$month', '$price', '$created_at')";
+        return mysqli_query($this->db, $sql);
+    }
+
+    public function changePrice($price)
+    {
+        $sql = "UPDATE member_payment_price SET price = '$price'";
         return mysqli_query($this->db, $sql);
     }
 }

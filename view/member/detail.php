@@ -1,7 +1,8 @@
 <!-- Require Header -->
 <?php
-require_once '../layout/header.php';
 require_once '../../init.php';
+$_SESSION['title'] = "BTC - Detail";
+require_once '../layout/header.php';
 
 
 // Get member detail from database
@@ -37,12 +38,12 @@ $payment_model->debt($member_model->status($member_detail['id']), $member_detail
                     <h5 class="text-secondary">Detail</h5>
                 </div>
                 <div class="col-3 my-auto d-flex justify-content-end">
-                    <a class="btn btn-sm btn-primary d-flex mr-2" href="">
+                    <a class="btn btn-sm btn-primary d-flex mr-2" href="update.php?id=<?= $member_detail['id'] ?>">
                         <i class="fas fa-pen"></i>
                     </a>
-                    <a class="btn btn-sm d-flex btn-danger" href="">
+                    <button class="btn btn-sm d-flex btn-danger" data-toggle="modal" data-target="#deleteModal">
                         <i class="fas fa-trash-alt"></i>
-                    </a>
+                    </button>
                 </div>
             </div>
         </div>
@@ -59,7 +60,7 @@ $payment_model->debt($member_model->status($member_detail['id']), $member_detail
                     <!-- Detail -->
                     <div class="row mt-4">
                         <div class="col">
-                            <table class="table mx-auto">
+                            <table class="table w-75 mx-auto">
                                 <tr>
                                     <td>Nama</td>
                                     <td>:</td>
@@ -98,13 +99,6 @@ $payment_model->debt($member_model->status($member_detail['id']), $member_detail
                             </table>
                         </div>
                     </div>
-
-                    <!-- Option -->
-                    <div class="row">
-                        <div class="col">
-
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -131,28 +125,30 @@ $payment_model->debt($member_model->status($member_detail['id']), $member_detail
                     <div class="row">
                         <div class="col">
                             <table class="table">
-                                <tr>
-                                    <th>#</th>
-                                    <th>Deskripsi</th>
-                                    <th>Bulan</th>
-                                    <th>Jumlah</th>
-                                    <th>Action</th>
-                                </tr>
-                                <?php foreach ($payment_model->get_debt($member_detail['id']) as $i => $d) : ?>
+                                <?php if ($payment_model->get_debt($member_detail['id'])) : ?>
                                     <tr>
-                                        <td><?= ++$i ?></td>
-                                        <td>Pembayaran Bulanan</td>
-                                        <td><?= $member_model->month($d['month']) ?></td>
-                                        <td>Rp. <?= number_format($price) ?></td>
-                                        <td>
-                                            <?php if ($member_model->status_pay($member_detail['id'], $d['month'])) : ?>
-                                                <button class="btn btn-primary btn-block btn-sm" disabled>Bayar</button>
-                                            <?php else : ?>
-                                                <button id="btnBayar" type="button" class="btn btn-primary btn-block btn-sm btnBayar" data-toggle="modal" data-target="#payModal" data-bulan="<?= $d['month'] ?>">Bayar</button>
-                                            <?php endif; ?>
-                                        </td>
+                                        <th>#</th>
+                                        <th>Deskripsi</th>
+                                        <th>Bulan</th>
+                                        <th>Jumlah</th>
+                                        <th>Action</th>
                                     </tr>
-                                <?php endforeach; ?>
+                                    <?php foreach ($payment_model->get_debt($member_detail['id']) as $i => $d) : ?>
+                                        <tr>
+                                            <td><?= ++$i ?></td>
+                                            <td>Pembayaran Bulanan</td>
+                                            <td><?= $member_model->month($d['month']) ?></td>
+                                            <td>Rp. <?= number_format($price) ?></td>
+                                            <td>
+                                                <button id="btnBayar" type="button" class="btn btn-primary btn-block btn-sm btnBayar" data-toggle="modal" data-target="#payModal" data-bulan="<?= $d['month'] ?>">Bayar</button>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else : ?>
+                                    <hr>
+                                    <h5 class="text-center text-secondary">Tidak Ada Tunggakan</h5>
+                                    <hr>
+                                <?php endif ?>
                             </table>
                         </div>
                     </div>
@@ -178,22 +174,26 @@ $payment_model->debt($member_model->status($member_detail['id']), $member_detail
             <div class="table-responsive">
                 <div class="container">
                     <table class="table">
-                        <tr>
-                            <th>#</th>
-                            <th>ID Pembayaran</th>
-                            <th>Deskripsi</th>
-                            <th>Tanggal Pembayaran</th>
-                            <th>Jumlah</th>
-                        </tr>
-                        <?php foreach ($payment_model->get($member_detail['id']) as $i => $h) : ?>
+                        <?php if ($payment_model->get($member_detail['id'])) : ?>
                             <tr>
-                                <td><?= ++$i ?></td>
-                                <td><?= $id_pay . $h['id'] ?></td>
-                                <td>Pembayaran <?= $member_model->month($h['month']) ?></td>
-                                <td><?= $member_model->parse_date($h['created_at']) ?></td>
-                                <td>Rp. <?= number_format($h['amount']) ?></td>
+                                <th>#</th>
+                                <th>ID Pembayaran</th>
+                                <th>Deskripsi</th>
+                                <th>Tanggal Pembayaran</th>
+                                <th>Jumlah</th>
                             </tr>
-                        <?php endforeach; ?>
+                            <?php foreach ($payment_model->get($member_detail['id']) as $i => $h) : ?>
+                                <tr>
+                                    <td><?= ++$i ?></td>
+                                    <td><?= $id_pay . $h['id'] ?></td>
+                                    <td>Pembayaran <?= $member_model->month($h['month']) ?></td>
+                                    <td><?= $member_model->parse_date($h['created_at']) ?></td>
+                                    <td>Rp. <?= number_format($h['amount']) ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            <h5 class="text-center text-secondary">Tidak Ada Riwayat Pembayaran</h5>
+                        <?php endif; ?>
                     </table>
                 </div>
             </div>
@@ -214,7 +214,7 @@ $payment_model->debt($member_model->status($member_detail['id']), $member_detail
             <form action="<?= URL ?>/controller/pay.php" method="POST">
                 <div class="modal-body">
 
-                    <!-- Detail PAyment -->
+                    <!-- Detail Payment -->
                     <h6>Detail Pembayaran</h6>
                     <table class="table">
                         <tr>
@@ -241,6 +241,10 @@ $payment_model->debt($member_model->status($member_detail['id']), $member_detail
 
                     <!-- HIdden ID -->
                     <input type="hidden" name="id" value="<?= $member_detail['id'] ?>">
+                    <!-- HIdden Image -->
+                    <input type="hidden" name="image" value="<?= $member_detail['image'] ?>">
+                    <!-- HIdden Name -->
+                    <input type="hidden" name="name" value="<?= $member_detail['name'] ?>">
                     <!-- Bulan -->
                     <input type="hidden" id="bulan" name="bulan" value="">
                     <!-- Tanggal -->
@@ -256,6 +260,35 @@ $payment_model->debt($member_model->status($member_detail['id']), $member_detail
     </div>
 </div>
 
+
+<!-- Modal Delete -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form action="<?= URL ?>/controller/delete.php" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Hapus <strong><?= $member_detail['name'] ?></strong> ?</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- hidden ID untuk menghapus data member -->
+                    <input type="hidden" name="id" value="<?= $member_detail['id'] ?>">
+                    <!-- Checkbox hapus pembayaran -->
+                    <div class="form-group form-check">
+                        <input type="checkbox" name="delete_payment" class="form-check-input" id="delete_payment">
+                        <label class="form-check-label" for="delete_payment">Hapus Semua Riwayat Pembayaran</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Hapus</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <!-- End Body -->
 
 <!-- Require Footer -->

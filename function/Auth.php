@@ -20,7 +20,7 @@ class Auth extends Database
             // Check Passrow verify
             if (password_verify($password, $res['password'])) {
                 $_SESSION['login'] = $res;
-                $_SESSION['title'] = "Dashboard";
+                $_SESSION['title'] = "BTC - Dashboard";
                 header("Location: " . URL . "/view/admin/index.php");
             } else {
                 $_SESSION['message'] = "Password Salah";

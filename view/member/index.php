@@ -1,11 +1,22 @@
 <!-- Require Header -->
 <?php
-require_once '../layout/header.php';
 require_once '../../init.php';
+$_SESSION['title'] = "BTC - Members";
+require_once '../layout/header.php';
 ?>
 
 <!-- Start Body -->
 <div class="container-fluid">
+
+    <!-- Alert -->
+    <?php if (isset($_SESSION['message'])) : ?>
+        <div class="alert alert-primary" role="alert">
+            <?= $_SESSION['message'] ?>
+        </div>
+    <?php
+        unset($_SESSION['message']);
+    endif;
+    ?>
 
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
@@ -26,51 +37,57 @@ require_once '../../init.php';
             <div class="table-responsive">
 
                 <table class="table" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Foto</th>
-                            <th>Nama</th>
-                            <th>Alamat</th>
-                            <th>Telepon</th>
-                            <th>Usia</th>
-                            <th>Status</th>
-                            <th>Option</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($member_model->get_all() as $i => $m) : ?>
+                    <?php if ($member_model->get_all()) : ?>
+                        <thead>
                             <tr>
-                                <!-- No -->
-                                <td><?= ++$i ?></td>
-                                <!-- Profile -->
-                                <td><img width="30" src="<?= URL ?>/resource/img/profile/<?= $m['image'] ?>" alt="Profile"></td>
-                                <!-- Nama -->
-                                <td><?= $m['name'] ?></td>
-                                <!-- Alamat -->
-                                <td><?= $m['address'] ?></td>
-                                <!-- Telepon -->
-                                <td><?= $m['phone'] ?></td>
-                                <!-- Usia -->
-                                <td><?= $member_model->age($m['birth_date']) ?></td>
-                                <!-- Status -->
-                                <?php if ($member_model->status($m['id'])) : ?>
-                                    <td>
-                                        <button class="btn btn-sm btn-primary"><?= $date->format('F') ?></button>
-                                    </td>
-                                <?php else : ?>
-                                    <td>
-                                        <button class="btn btn-sm btn-secondary"><?= $date->format('F') ?></button>
-                                    </td>
-                                <?php endif; ?>
-
-                                <!-- Option -->
-                                <td>
-                                    <a class="btn btn-sm btn-block" href="<?= URL ?>/view/member/detail.php?id=<?= $m['id'] ?>">Detail</a>
-                                </td>
+                                <th>#</th>
+                                <th>Foto</th>
+                                <th>Nama</th>
+                                <th>Alamat</th>
+                                <th>Telepon</th>
+                                <th>Usia</th>
+                                <th>Status</th>
+                                <th>Option</th>
                             </tr>
-                        <?php endforeach; ?>
-                    </tbody>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($member_model->get_all() as $i => $m) : ?>
+                                <tr>
+                                    <!-- No -->
+                                    <td><?= ++$i ?></td>
+                                    <!-- Profile -->
+                                    <td><img width="30" src="<?= URL ?>/resource/img/profile/<?= $m['image'] ?>" alt="Profile"></td>
+                                    <!-- Nama -->
+                                    <td><?= $m['name'] ?></td>
+                                    <!-- Alamat -->
+                                    <td><?= $m['address'] ?></td>
+                                    <!-- Telepon -->
+                                    <td><?= $m['phone'] ?></td>
+                                    <!-- Usia -->
+                                    <td><?= $member_model->age($m['birth_date']) ?></td>
+                                    <!-- Status -->
+                                    <?php if ($member_model->status($m['id'])) : ?>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary"><?= $date->format('F') ?></button>
+                                        </td>
+                                    <?php else : ?>
+                                        <td>
+                                            <button class="btn btn-sm btn-secondary"><?= $date->format('F') ?></button>
+                                        </td>
+                                    <?php endif; ?>
+
+                                    <!-- Option -->
+                                    <td>
+                                        <a class="btn btn-sm btn-block" href="<?= URL ?>/view/member/detail.php?id=<?= $m['id'] ?>">Detail</a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            <hr>
+                            <h5 class="text-center text-secondary">Tidak Ada Member Terdaftar</h5>
+                            <hr>
+                        <?php endif; ?>
+                        </tbody>
                 </table>
             </div>
         </div>

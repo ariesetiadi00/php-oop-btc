@@ -7,7 +7,7 @@
 <footer class="sticky-footer bg-white">
     <div class="container my-auto">
         <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Your Website 2020</span>
+            <span>Copyright &copy; Badung Tennis Club <?= date('Y') ?></span>
         </div>
     </div>
 </footer>
@@ -56,6 +56,7 @@
 <!-- Custom scripts for all pages-->
 <script src="<?= URL ?>/resource/sbadmin2/js/sb-admin-2.min.js"></script>
 <script src="<?= URL ?>/resource/js/payment.js"></script>
+<script src="<?= URL ?>/resource/js/price.js"></script>
 
 <!-- Bootstrap JS -->
 <script src="<?= URL ?>/resource/js/bootstrap.js"></script>
